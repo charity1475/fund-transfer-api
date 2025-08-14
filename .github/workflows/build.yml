@@ -1,12 +1,7 @@
-name: Package
+name: Build and Push Docker Image
 
 on:
   push:
-    paths:
-      - "src/**"
-    branches:
-      - master
-  pull_request:
     branches:
       - master
 
@@ -56,8 +51,23 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: charity1475/fund-transfer-api:latest
+          tags: |
+            charity1475/fund-transfer-api:${{ github.run_number }}
+            charity1475/fund-transfer-api:${{ github.sha }}
+            charity1475/fund-transfer-api:latest
           push: true
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Update K8s manifest with new image tag
+        run: |
+            sed -i "s|image: charity1475/fund-transfer-api:.*|image: charity1475/fund-transfer-api:${{ github.run_number }}|" k8s/app/fund-transfer-api-deployment.yaml
+
+      - name: Commit and Push updated manifest
+        run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add k8s/app/fund-transfer-api-deployment.yaml
+                git commit -m "Update image tag to ${{ github.run_number }}"
+                git push
