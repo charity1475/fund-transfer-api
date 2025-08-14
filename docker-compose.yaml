@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: fund-transfer-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prep
+      - DB_URL=jdbc:mysql://mysql-db:3306/fund_transfer_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - DB_USERNAME=charity
+      - DB_PASSWORD=1475charity
+    depends_on:
+      - mysql-db
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1475charity
+      - MYSQL_USER=charity
+      - MYSQL_PASSWORD=1475charity
+      - MYSQL_DATABASE=fund_transfer_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/db:/docker-entrypoint-initdb.d/
+
+volumes:
+  mysql_data:

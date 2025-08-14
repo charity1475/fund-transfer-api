@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "charity/fund-transfer-api"
+        DOCKER_TAG = "latest"
+        REGISTRY_CREDENTIALS = credentials('docker-creds')
+    }
+
+    tools {
+        jdk 'jdk21'
+        maven 'Maven-3.9.5'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/charity1475/fund-transfer-api.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh "mvn clean package -DskipTests"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh """
+                    echo "${REGISTRY_CREDENTIALS_PSW}" | docker login -u "${REGISTRY_CREDENTIALS_USR}" --password-stdin
+                    docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and push completed successfully!'
+        }
+        failure {
+            echo '❌ Build failed!'
+        }
+    }
+}

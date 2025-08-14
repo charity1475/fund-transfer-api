@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TransactionRequest",
+  "description": "Schema for a transaction request with updated validation rules.",
+  "type": "object",
+  "properties": {
+    "service": {
+      "type": "string",
+      "description": "The service identifier.",
+      "maxLength": 50
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the entity."
+    },
+    "amount": {
+      "type": "string",
+      "description": "The transaction amount as a formatted string of digits.",
+      "pattern": "^[0-9,.]+$",
+      "maxLength": 60
+    },
+    "account": {
+      "type": "string",
+      "description": "The account number.",
+      "maxLength": 30,
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "reference": {
+      "type": "string",
+      "description": "A unique transaction reference.",
+      "maxLength": 40,
+      "pattern": "^[a-zA-Z0-9]+$"
+    }
+  },
+  "required": [
+    "service",
+    "name",
+    "amount",
+    "account",
+    "reference"
+  ],
+  "additionalProperties": false
+}

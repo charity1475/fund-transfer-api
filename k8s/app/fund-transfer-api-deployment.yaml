@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fund-transfer-api-deployment
+  namespace: fund-transfer
+  labels:
+    app: fund-transfer-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fund-transfer-api
+  template:
+    metadata:
+      labels:
+        app: fund-transfer-api
+    spec:
+      containers:
+        - name: fund-transfer-api
+          image: docker.io/charity1475/fund-transfer-api:v1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prep"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF-8 -Xmx512m -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof -Duser.timezone=UTC"
+            - name: DB_URL
+              value: "jdbc:mysql://mysql-db-service:3306/fund_transfer_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: DB_PASSWORD
+#          livenessProbe:
+#            httpGet:
+#              path: /actuator/health
+#              port: 8080
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
+#            timeoutSeconds: 5
+#            failureThreshold: 3
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health
+#              port: 8080
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            timeoutSeconds: 3
+#            failureThreshold: 2
