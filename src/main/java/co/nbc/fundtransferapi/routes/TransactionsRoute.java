@@ -44,7 +44,7 @@ public class TransactionsRoute extends RouteBuilder {
 
     from(processTransactionRoute)
       .routeId("processTransactionRoute").log(INFO, "Validating transaction request - ${exchangeId}")
-      .to(jsonSchemaValidator).unmarshal().json().log("Inserting new transaction: ${body}")
+      .to(jsonSchemaValidator).unmarshal().json().log(INFO, "Inserting new transaction: ${body}")
       .doTry()
       .to("sql:INSERT INTO transactions (service, name, amount, account, reference) VALUES (:#service, :#name, :#amount, :#account, :#reference)")
       .setHeader("status", constant("600"))
@@ -53,8 +53,7 @@ public class TransactionsRoute extends RouteBuilder {
       .doCatch(SQLIntegrityConstraintViolationException.class, DuplicateKeyException.class)
       .setHeader("status", constant("601"))
       .setHeader("message", constant("Duplicate reference received, try with another one."))
-      .setVariable("httpStatusCode", constant(500))
-      .doCatch(SQLException.class)
+      .setVariable("httpStatusCode", constant(500)).doCatch(SQLException.class)
       .setHeader("status", constant("601"))
       .setHeader("message", simple("${exception.message}"))
       .setVariable("httpStatusCode", constant(500)).end()
