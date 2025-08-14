@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: fund-transfer-api
-          image: docker.io/charity1475/fund-transfer-api:v1.0.1
+          image: docker.io/charity1475/fund-transfer-api:3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
