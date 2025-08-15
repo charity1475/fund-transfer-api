@@ -20,7 +20,7 @@ spec:
           image: docker.io/charity1475/fund-transfer-api:4
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8081
+            - containerPort: 8082
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prep"

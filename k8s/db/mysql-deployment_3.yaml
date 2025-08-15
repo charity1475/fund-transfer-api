@@ -17,7 +17,7 @@ spec:
         app: mysql-db
     spec:
       containers:
-        - name: mysql-db-container
+        - name: devops-database
           image: mysql:8.0
           ports:
             - containerPort: 3306
