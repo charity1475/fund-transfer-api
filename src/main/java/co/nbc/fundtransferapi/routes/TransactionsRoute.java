@@ -38,7 +38,7 @@ public class TransactionsRoute extends RouteBuilder {
       .setHeader("Content-Type", constant("application/json"));
 
     restConfiguration().component("servlet")
-      .host("0.0.0.0").port(8082).dataFormatProperty("prettyPrint", "true");
+      .host("0.0.0.0").port(8765).dataFormatProperty("prettyPrint", "true");
 
     rest("/v1/transactions").put().to(processTransactionRoute);
 
