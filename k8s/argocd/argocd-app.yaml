@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fund-transfer-api
+  name: fund-transfer-api-app
   namespace: argocd
 spec:
   destination:
@@ -13,8 +13,3 @@ spec:
     repoURL: https://github.com/charity1475/fund-transfer-api
     targetRevision: HEAD
   syncPolicy: {}
-  syncOptions:
-    - CreateNamespace=true
-  automated:
-    selfHeal: true
-    prune: true
