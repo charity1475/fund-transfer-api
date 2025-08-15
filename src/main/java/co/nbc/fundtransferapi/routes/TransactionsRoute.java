@@ -43,7 +43,7 @@ public class TransactionsRoute extends RouteBuilder {
     rest("/v1/transactions").put().to(processTransactionRoute);
 
     from(processTransactionRoute)
-      .routeId("processTransactionRoute").log(INFO, "Validating transaction request - ${exchangeId}")
+      .routeId("processTransactionRoute").log(INFO, "Validating request - ${exchangeId}")
       .to(jsonSchemaValidator).unmarshal().json().log(INFO, "Inserting new transaction: ${body}")
       .doTry()
       .to("sql:INSERT INTO transactions (service, name, amount, account, reference) VALUES (:#service, :#name, :#amount, :#account, :#reference)")
