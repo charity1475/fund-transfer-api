@@ -26,7 +26,7 @@ spec:
     app: fund-transfer-api
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8765
+      targetPort: 8081
       nodePort: 30080
   type: NodePort
