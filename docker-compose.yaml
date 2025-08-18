@@ -5,7 +5,7 @@ services:
     build: .
     container_name: fund-transfer-api
     ports:
-      - "8080:8080"
+      - "8765:8765"
     environment:
       - SPRING_PROFILES_ACTIVE=prep
       - DB_URL=jdbc:mysql://mysql-db:3306/fund_transfer_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
@@ -16,7 +16,7 @@ services:
 
   mysql-db:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: devops_database
     ports:
       - "3306:3306"
     environment:
