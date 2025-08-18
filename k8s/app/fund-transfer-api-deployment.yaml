@@ -15,19 +15,45 @@ spec:
       labels:
         app: fund-transfer-api
     spec:
+      volumes:
+        - name: fund-transfer-api-logs
+          hostPath:
+            path: /Users/charity/Github/fund-transfer-api/logs
+            type: DirectoryOrCreate
+#          persistentVolumeClaim:
+#            claimName: fund-transfer-api-logs-pvc
+        - name: config-volume
+          configMap:
+            name: environment-vars-config-map
+      restartPolicy: Always
       containers:
         - name: fund-transfer-api
           image: docker.io/charity1475/fund-transfer-api:7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8765
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          volumeMounts:
+            - name: fund-transfer-api-logs
+              mountPath: /var/log/fund-transfer-api
+            - name: config-volume
+              mountPath: "/config"
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prep"
             - name: JAVA_TOOL_OPTIONS
               value: "-Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF-8 -Xmx512m -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof -Duser.timezone=UTC"
             - name: DB_URL
-              value: "jdbc:mysql://mysql-db-service:3306/fund_transfer_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: DB_URL
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -38,19 +64,19 @@ spec:
                 secretKeyRef:
                   name: mysql-credentials
                   key: DB_PASSWORD
-#          livenessProbe:
-#            httpGet:
-#              path: /actuator/health
-#              port: 8080
-#            initialDelaySeconds: 30
-#            periodSeconds: 10
-#            timeoutSeconds: 5
-#            failureThreshold: 3
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health
-#              port: 8080
-#            initialDelaySeconds: 20
-#            periodSeconds: 5
-#            timeoutSeconds: 3
-#            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8765
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8765
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
