@@ -28,7 +28,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: fund-transfer-api
-          image: docker.io/charity1475/fund-transfer-api:7
+          image: docker.io/charity1475/fund-transfer-api:8
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8765
