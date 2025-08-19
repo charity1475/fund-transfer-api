@@ -34,6 +34,7 @@ data:
     spring.datasource.hikari.connection-timeout=30000
     spring.datasource.hikari.leak-detection-threshold=45000
     ## Logging Configuration
-    logging.file.name=/var/log/fund-transfer-api/fund-transfer.log
+    logging.file.name=app.log
+    logging.file.path=$PWD/logs
     logging.pattern.file=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
 

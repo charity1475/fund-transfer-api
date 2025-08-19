@@ -17,11 +17,8 @@ spec:
     spec:
       volumes:
         - name: fund-transfer-api-logs
-          hostPath:
-            path: /Users/charity/Github/fund-transfer-api/logs
-            type: DirectoryOrCreate
-#          persistentVolumeClaim:
-#            claimName: fund-transfer-api-logs-pvc
+          persistentVolumeClaim:
+            claimName: fund-transfer-api-logs-pvc
         - name: config-volume
           configMap:
             name: environment-vars-config-map
