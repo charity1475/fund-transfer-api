@@ -74,7 +74,7 @@ public class TransactionsRoute extends RouteBuilder {
           .setVariable("httpStatusCode", constant(200))
       .doCatch(SQLIntegrityConstraintViolationException.class, DuplicateKeyException.class)
           .setHeader("status", constant("601"))
-          .setHeader("message", constant("Duplicate reference received, try with another one.."))
+          .setHeader("message", constant("Duplicate reference received, try with another one."))
           .setVariable("httpStatusCode", constant(500))
       .doCatch(SQLException.class)
           .setHeader("status", constant("601"))
