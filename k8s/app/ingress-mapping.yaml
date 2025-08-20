@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fund-transfer-ingress
+  namespace: fund-transfer
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: fund-transfer.local
+      http:
+        paths:
+          - path: /nbc-bank/devops/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: fund-transfer-api-service
+                port:
+                  number: 8765
