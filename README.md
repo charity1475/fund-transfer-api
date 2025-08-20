@@ -27,3 +27,5 @@ kubectl apply -f k8s/db/ -n fund-transfer
 
 
 
+
+
